@@ -1,5 +1,8 @@
 // import 'dart:js_util';
 import 'package:flutter/material.dart';
+import 'package:myapp/stories/StoriesScreen.dart';
+import 'package:myapp/videosPage/PlayListsScreen.dart';
+import 'package:myapp/myBottomNavigationBar.dart';
 // import 'package:flutter/rendering.dart';
 
 void main() {
@@ -12,9 +15,14 @@ class HomeScreen extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Flutter Demo',
-      home: HomeScreenclass(
+      initialRoute: '/',
+      routes: {
+        '/PlayListsScreen': (context) => const PlayListsScreen(),
+        '/StoriesScreen': (context) => const pdf(),
+      },
+      home: const HomeScreenclass(
         title: '',
       ),
     );
@@ -189,7 +197,7 @@ class _MyHomePageState extends State<HomeScreenclass>
                 // ElevatedButton(onPressed: () {}, child: const Text('اقرأ')),
                 ElevatedButton(
                   onPressed: () {
-                    //navigate
+                    Navigator.pushNamed(context, '/StoriesScreen');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(
@@ -214,7 +222,7 @@ class _MyHomePageState extends State<HomeScreenclass>
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    //navigate
+                    Navigator.pushNamed(context, '/PlayListsScreen');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(

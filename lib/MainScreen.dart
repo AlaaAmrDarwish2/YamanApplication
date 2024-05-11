@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/login_Signup/login.dart';
+import 'package:myapp/users.dart';
 // import 'package:myapp/login_Signup/login_screen.dart';
 // import 'package:flutter_application_8/main2.dart';
 // import 'package:flutter_application_8/HomeScreen.dart';
@@ -23,6 +24,7 @@ class MainScreen extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/login': (context) => const LoginPage(email:'',password:''),
+        '/users': (context) => const users(),
       },
     );
   }
@@ -83,7 +85,7 @@ class _MyHomePageState extends State<MainScreenclass> {
           child: 
           ElevatedButton(
             onPressed: (){
-              Navigator.pushNamed(context, '/login');
+              Navigator.pushNamed(context, '/users');
             },
             style: ElevatedButton.styleFrom(
             backgroundColor:const Color.fromARGB(1500, 2, 152, 200), // Background color

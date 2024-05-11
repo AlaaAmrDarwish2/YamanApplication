@@ -1,70 +1,143 @@
 import 'package:flutter/material.dart';
-// import 'DatabaseManager.dart';
 
-class UserDataScreen extends StatefulWidget {
-  const UserDataScreen({super.key});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _UserDataScreenState createState() => _UserDataScreenState();
+void main() {
+  runApp(const account());
 }
-//https://github.com/AlaaAmrDarwish2/YamanApplication.git
-class _UserDataScreenState extends State<UserDataScreen> {
-  late Future<List<Map<String, dynamic>>> _userDataFuture;
+
+class account extends StatelessWidget {
+  const account({super.key});
 
   @override
-  
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'الحساب الشخصي',
+      theme: ThemeData(
+        primaryColor: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: AccountPage(),
+    );
+  }
+}
 
-
+class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('البيانات الشخصية'),
+        backgroundColor: const Color.fromARGB(250, 2, 152, 200),
+        toolbarHeight: 50,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(50),
+                bottomRight: Radius.circular(50))),
+        title: const Text(
+          'الحساب الشخصي',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: _userDataFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child:  CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text('Error fetching data'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No data available'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final user = snapshot.data![index];
-                return ListTile(
-                  title: Column(
-                    children: [
-                      Text(
-                        'اسم الوالد: ${user['parentName']}',
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                      const SizedBox(
-                        height:10,
-                      ),
-                      Text('اسم الطفل: ${user['childName']}',
-                          textAlign: TextAlign.right ,style:const TextStyle(fontSize: 20),),
-                      const SizedBox(
-                        height:10,
-                      ),
-                    ],
-                  ),
-                  subtitle: Text(' ${user['email']}:الايميل ',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20),
-                  ),
-
-                  // Customize the way you want to display the data
-                );
+      body: Center(
+        child: Column(
+          children: [
+            const SizedBox(height: 50),
+            GestureDetector(
+              onTap: () {
+                // Handle avatar tap action
               },
-            );
-          }
-        },
+              child: Stack(
+                children: [
+                  Container(
+                    // width: 150,
+                    // height: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 2, 152, 200),
+                          width: 4),
+                    ),
+                    child: const CircleAvatar(
+                      radius: 100,
+                      backgroundImage: AssetImage('assets/img/page.png'),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 5,
+                    right: 5,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color.fromARGB(
+                            255, 2, 152, 200), // تغيير لون دائرة الأيقونة هنا
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.camera_alt, color: Colors.white),
+                        onPressed: () {
+                          // Handle camera tap action
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'اسم المستخدم',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ,color: Color.fromARGB(1500, 2, 152, 200),
+              ),
+            ),
+            const SizedBox(height: 20,),
+            const Text(
+              'user@example.com',
+              style: TextStyle(fontSize: 16 , color: Color.fromARGB(1500, 2, 152, 200),
+              ),
+            ),
+            const SizedBox(height: 50),
+            ElevatedButton(
+              onPressed: () {
+                // Handle change password action
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(1500, 2, 152, 200),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.only(
+                    left: 50, right: 50, top: 16, bottom: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                'تغيير كلمة المرور',
+                style: TextStyle(color: Colors.white , fontSize: 15),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                // Handle log out action
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(1500, 2, 152, 200),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.only(
+                    left: 55, right: 55, top: 16, bottom: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                elevation: 0,
+              ),
+              child: const Text(
+                'تسجيل الخروج',
+                style: TextStyle(color: Colors.white , fontSize: 15),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

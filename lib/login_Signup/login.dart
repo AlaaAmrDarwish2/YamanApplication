@@ -65,6 +65,11 @@ class _SignInFormState extends State<SignInForm> {
           controller: passwordController,
           obscureText: true,
           decoration: const InputDecoration(
+                                  suffixIcon: Icon(
+              Icons.visibility_sharp,
+              color: Color.fromARGB(1500, 2, 152, 200),
+            ),
+
             labelText: 'كلمة المرور',
           ),
         ),

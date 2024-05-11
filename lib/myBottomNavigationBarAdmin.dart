@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:myapp/HomeScreen.dart';
+import 'package:myapp/HomeScreenAdmin.dart';
 import 'package:myapp/login_Signup/account.dart';
 import 'package:myapp/settings.dart';
-import 'package:myapp/stories/StoriesScreen.dart';
-import 'package:myapp/videosPage/PlayListsScreen.dart';
+// import 'package:myapp/stories/StoriesScreen.dart';
+import 'package:myapp/storiesAdmin/StoriesScreenAdmin.dart';
+import 'package:myapp/videosPage/PlayListsScreenAdmin.dart';
+// import 'package:myapp/videosPage/PlayListsScreen.dart';
 
-
-class MyNav extends StatelessWidget {
-  const MyNav({super.key});
+class MyNavAdmin extends StatelessWidget {
+  const MyNavAdmin({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: myBottonNavigationBar(),
+      home: myBottonNavigationBarAdmin(),
     );
   }
 }
 
 void main() {
-  runApp(const MyNav());
+  runApp(const MyNavAdmin());
   // FlutterPdfviewPlugin.init();
 }
 
 // ignore: camel_case_types
-class myBottonNavigationBar extends StatefulWidget {
-  const myBottonNavigationBar({super.key});
+class myBottonNavigationBarAdmin extends StatefulWidget {
+  const myBottonNavigationBarAdmin({super.key});
 
   @override
-  State<myBottonNavigationBar> createState() => _MyNavState();
+  State<myBottonNavigationBarAdmin> createState() => _MyNavState();
 }
 
-class _MyNavState extends State<myBottonNavigationBar> {
+class _MyNavState extends State<myBottonNavigationBarAdmin> {
   int _intpage = 0;
   void onTapped(int index) {
     setState(() {
@@ -42,9 +43,9 @@ class _MyNavState extends State<myBottonNavigationBar> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _Children = [
-      const HomeScreen(),
-      const pdf(),
-      const PlayListsScreen(),
+      const HomeScreenAdmin(),
+      const PdfApp(),
+      const PlayListsScreenAdmin(),
       const account(),
       settings()
     ];
