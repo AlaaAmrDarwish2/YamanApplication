@@ -1,4 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+// import 'package:myapp/login_Signup/account.dart';
+// import 'package:myapp/firebase_auth/firebase_auth_services.dart';
+import 'package:myapp/login_Signup/login.dart';
+// import 'package:myapp/myBottomNavigationBar.dart';
 
 void main() {
   runApp(const account());
@@ -15,10 +20,22 @@ class account extends StatelessWidget {
         primaryColor: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      initialRoute: '/',
+      routes: {
+        '/login': (context) => const LoginPage(
+              email: '',
+              password: '',
+            ),
+      },
       home: AccountPage(),
     );
   }
 }
+
+User? user = FirebaseAuth.instance.currentUser;
+String? userEmail = user?.email ?? 'No email found';
+String? userName = user?.displayName ?? 'No name found';
+// String? userName = user?.user ?? 'No username found';
 
 class AccountPage extends StatelessWidget {
   @override
@@ -85,15 +102,22 @@ class AccountPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'اسم المستخدم',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold ,color: Color.fromARGB(1500, 2, 152, 200),
+            Text(
+              userName!,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(1500, 2, 152, 200),
               ),
             ),
-            const SizedBox(height: 20,),
-            const Text(
-              'user@example.com',
-              style: TextStyle(fontSize: 16 , color: Color.fromARGB(1500, 2, 152, 200),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              userEmail!,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Color.fromARGB(1500, 2, 152, 200),
               ),
             ),
             const SizedBox(height: 50),
@@ -113,13 +137,15 @@ class AccountPage extends StatelessWidget {
               ),
               child: const Text(
                 'تغيير كلمة المرور',
-                style: TextStyle(color: Colors.white , fontSize: 15),
+                style: TextStyle(color: Colors.white, fontSize: 15),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Handle log out action
+              onPressed: () async {
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context, rootNavigator: true).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const LoginPage(email: '', password: '',)));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(1500, 2, 152, 200),
@@ -133,7 +159,7 @@ class AccountPage extends StatelessWidget {
               ),
               child: const Text(
                 'تسجيل الخروج',
-                style: TextStyle(color: Colors.white , fontSize: 15),
+                style: TextStyle(color: Colors.white, fontSize: 15),
               ),
             ),
           ],

@@ -1,9 +1,45 @@
 // ignore_for_file: avoid_print
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/login_Signup/login.dart';
+import 'package:myapp/HomeScreen.dart';
+import 'package:myapp/firebase_auth/firebase_auth_services.dart';
+import 'package:myapp/myBottomNavigationBar.dart';
+// import 'package:myapp/login_Signup/login.dart';
 // import 'package:flutter_application_8/login.dart';
 // import 'DatabaseManager.dart'; // Import your DatabaseManager class
+
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyA3QHtrkb4efcW2D5ILfhOnPnQ6hAznhIw',
+            appId: "1:1065969017070:web:92c82404068ed35aecd3ff",
+            messagingSenderId: "1065969017070",
+            projectId: "yaman-9026a"));
+  }
+  await Firebase.initializeApp();
+  runApp(const SignUpPage());
+}
+
+@override
+Widget build(BuildContext context) {
+  return MaterialApp(
+    title: 'الحساب الشخصي',
+    theme: ThemeData(
+      primaryColor: Colors.blue,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+    ),
+    initialRoute: '/',
+    routes: {
+      '/HomeScreen': (context) => const HomeScreen(),
+    },
+    home: const SignUpPage(),
+  );
+}
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -14,6 +50,7 @@ class SignUpPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('انشاء حساب'),
       ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -41,6 +78,7 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
+  final FireBaseAuthService _auth = FireBaseAuthService();
   final TextEditingController _parentNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -73,7 +111,7 @@ class _SignUpFormState extends State<SignUpForm> {
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 2, 152, 200)),
-              textDirection: TextDirection.rtl,
+              // textDirection: TextDirection.rtl,
             ),
             TextFormField(
               controller: _parentNameController,
@@ -83,13 +121,13 @@ class _SignUpFormState extends State<SignUpForm> {
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'البريد الإلكتروني'),
               keyboardType: TextInputType.emailAddress,
-              textDirection: TextDirection.rtl,
+              // textDirection: TextDirection.rtl,
             ),
             TextFormField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'كلمة المرور'),
               obscureText: true,
-              textDirection: TextDirection.rtl,
+              // textDirection: TextDirection.rtl,
             ),
             const SizedBox(height: 20),
             const Text(
@@ -124,54 +162,16 @@ class _SignUpFormState extends State<SignUpForm> {
             CheckboxListTile(
               title: const Text('الوصول الإشرافي'),
               value: false, // Set value based on state management
-              onChanged: (value) {
-                // Implement checkbox logic
+              onChanged: (bool? value) {
+                setState(() {
+                  // _supervisoryAccess = value ?? false;
+                });
               },
             ),
             // Add other form fields for email, password, child details, etc.
 
             ElevatedButton(
-              onPressed: () async {
-                // if (_formKey.currentState!.validate()) {
-                //   // If the form is valid, proceed with saving data
-                //   Map<String, dynamic> userData = {
-                //     'parentName': _parentNameController.text,
-                //     'email': _emailController.text,
-                //     'password': _passwordController.text,
-                //     'childName': _childNameController.text,
-                //     'childDOB': _childDOBController.text,
-                //     'supervisoryAccess': _supervisoryAccess ? 1 : 0,
-                //   };
-                  // int userId =
-                  // await DatabaseManager.insertUser(userData);
-
-                  // After inserting, navigate to another page or perform an action
-                  // For example, navigate to a success page or the login page
-                  // Navigator.pushReplacementNamed(context, '/login');
-                  // ignore: use_build_context_synchronously
-                  // widget.onSignIn(_emailController.text.trim(),
-                  //     _passwordController.text.trim());
-
-                  // ignore: unnecessary_null_comparison
-                  // if (_emailController != null) {
-                  //   print("$_passwordController");
-                  //   print("$_emailController");
-                  // } else {
-                  //   print("null");
-                  // }
-                  // ignore: use_build_context_synchronously
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(
-                        email: '$_emailController',
-                        password: '$_passwordController',
-                      ),
-                    ),
-                    // print(SnapshotController(userData[]['parentName']));
-                  );
-                
-              },
+              onPressed: _signUp,
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     const Color.fromARGB(1500, 2, 152, 200), // Background color
@@ -190,5 +190,22 @@ class _SignUpFormState extends State<SignUpForm> {
         ),
       ),
     );
+  }
+
+  void _signUp() async {
+    String parentname = _parentNameController.text;
+    String emailAddress = _emailController.text;
+    String password = _passwordController.text;
+    User? user = await _auth.signUpWithNameAndEmailAndPassword(parentname,emailAddress, password);
+
+    if (user != null) {
+      print("user is successfully created ! ");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MyNav()),
+      );
+    } else {
+      print("some error happend");
+    }
   }
 }

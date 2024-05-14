@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/login_Signup/login.dart';
 import 'package:myapp/login_SignupAdmin/loginAdmin.dart';
@@ -9,7 +11,18 @@ import 'package:myapp/myBottomNavigationBarAdmin.dart';
 // import 'package:flutter_application_8/HomeScreen.dart';
 // import 'package:flutter_application_8/myBottomNavigationBar.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyA3QHtrkb4efcW2D5ILfhOnPnQ6hAznhIw',
+            appId: "1:1065969017070:web:92c82404068ed35aecd3ff",
+            messagingSenderId: "1065969017070",
+            projectId: "yaman-9026a",
+            ));
+  }
+  await Firebase.initializeApp();
   runApp(const users());
 }
 

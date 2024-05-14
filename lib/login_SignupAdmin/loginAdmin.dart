@@ -1,11 +1,26 @@
 // ignore: file_names
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/HomeScreen.dart';
+import 'package:myapp/firebase_auth/firebase_auth_services.dart';
 import 'package:myapp/login_Signup/login.dart';
+import 'package:myapp/login_SignupAdmin/signupAdmin.dart';
 import 'package:myapp/myBottomNavigationBar.dart';
 import 'package:myapp/myBottomNavigationBarAdmin.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyA3QHtrkb4efcW2D5ILfhOnPnQ6hAznhIw',
+            appId: "1:1065969017070:web:92c82404068ed35aecd3ff",
+            messagingSenderId: "1065969017070",
+            projectId: "yaman-9026a"));
+  }
+  await Firebase.initializeApp();
   runApp(const LoginAppAdmin());
 }
 
@@ -24,8 +39,9 @@ class LoginAppAdmin extends StatelessWidget {
         '/login': (context) => const LoginPage(email: '', password: ''),
         '/myBottomNavigationBarAdmin': (context) => const MyNavAdmin(),
         '/myBottomNavigationBar': (context) => const MyNav(),
-        '/HomeScreen':(context) => const HomeScreen(),
+        '/HomeScreen': (context) => const HomeScreen(),
         '/loginAdmin': (context) => const LoginAppAdmin(),
+        '/signupAdmin': (context) => AdminSignUpApp(),
       },
       home: const AdminLoginPage(),
       debugShowCheckedModeBanner: false, // Add this line
@@ -43,6 +59,24 @@ class AdminLoginPage extends StatefulWidget {
 
 class _AdminLoginPageState extends State<AdminLoginPage> {
   bool _rememberMe = false;
+  final FireBaseAuthService _auth = FireBaseAuthService();
+  // final TextEditingController _parentNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  // final TextEditingController _childNameController = TextEditingController();
+  // final TextEditingController _childDOBController = TextEditingController();
+  bool showError = false;
+  // final bool _supervisoryAccess = false;
+
+  @override
+  void dispose() {
+    // _parentNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    // _childNameController.dispose();
+    // _childDOBController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,14 +88,13 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor:const  Color.fromARGB(1500, 2, 152, 200),
+          backgroundColor: const Color.fromARGB(1500, 2, 152, 200),
           leading: null,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(50),
-                  bottomRight:
-                  Radius.circular(50))), 
-                      // Remove the leading icon
+                  bottomRight: Radius.circular(50))),
+          // Remove the leading icon
           title: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -77,7 +110,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                 width: 63,
               ),
               IconButton(
-                icon:const  Icon(
+                icon: const Icon(
                   Icons.arrow_back,
                   color: Colors.white,
                 ),
@@ -92,7 +125,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
           textDirection: TextDirection.rtl,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: SingleChildScrollView( // Add SingleChildScrollView here
+            child: SingleChildScrollView(
+              // Add SingleChildScrollView here
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -103,21 +137,30 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                     backgroundImage: AssetImage('./assets/img/page.png'),
                   ),
                   const SizedBox(height: 20),
-                  const TextField(
-                    style: TextStyle(fontSize: 16), // Increase font size of text fields
-                    decoration: InputDecoration(
+                  TextField(
+                    style: const TextStyle(
+                        fontSize: 16), // Increase font size of text fields
+                    controller: _emailController,
+                    decoration: const InputDecoration(
                       labelText: 'البريد الإلكتروني',
-                      labelStyle: TextStyle(fontSize: 16), // Increase font size of label
+                      labelStyle: TextStyle(
+                          fontSize: 16), // Increase font size of label
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const TextField(
-                    style: TextStyle(fontSize: 16), // Increase font size of text fields
+                  TextField(
+                    style: const TextStyle(
+                        fontSize: 16), // Increase font size of text fields
                     obscureText: true,
-                    decoration: InputDecoration(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(
                       labelText: 'كلمة المرور',
-                      suffixIcon: Icon(Icons.visibility_sharp , color: Color.fromARGB(1500, 2, 152, 200),),
-                      labelStyle: TextStyle(fontSize: 16), // Increase font size of label
+                      suffixIcon: Icon(
+                        Icons.visibility_sharp,
+                        color: Color.fromARGB(1500, 2, 152, 200),
+                      ),
+                      labelStyle: TextStyle(
+                          fontSize: 16), // Increase font size of label
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -130,7 +173,8 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                             _rememberMe = value ?? false;
                           });
                         },
-                        activeColor: const Color.fromRGBO(2, 152, 200, 1), // Change the active color of the checkbox
+                        activeColor: const Color.fromRGBO(2, 152, 200,
+                            1), // Change the active color of the checkbox
                       ),
                       const Text(
                         'تذكرني',
@@ -143,17 +187,17 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/myBottomNavigationBarAdmin');
-                    },
+                    onPressed: _login,
                     style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(), 
-                      backgroundColor:const Color.fromRGBO(2, 152, 200, 1),
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10)
-                    ),
-                    child:const Text(
+                        shape: const StadiumBorder(),
+                        backgroundColor: const Color.fromRGBO(2, 152, 200, 1),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10)),
+                    child: const Text(
                       'تسجيل الدخول',
-                      style: TextStyle(fontSize: 24 , color: Color.fromARGB(1500, 255, 255, 255)), // Increase font size of button text
+                      style: TextStyle(
+                          fontSize: 24,
+                          color: Color.fromARGB(1500, 255, 255,
+                              255)), // Increase font size of button text
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -175,9 +219,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Add action for 'ليس لديك حساب؟ لننشئ حساباً جديداً'
-                      // Replace the print statement with the desired action
-                      // ignore: avoid_print
+                      Navigator.pushNamed(context, '/signupAdmin');
                       print('Navigate to sign up screen');
                     },
                     child: const Text(
@@ -196,5 +238,22 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
         ),
       ),
     );
+  }
+
+  void _login() async {
+    // String parentname = _parentNameController.text;
+    String emailAddress = _emailController.text;
+    String password = _passwordController.text;
+    User? user = await _auth.loginWithEmailAndPassword(emailAddress, password);
+
+    if (user != null) {
+      print("user is successfully signedin ! ");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MyNavAdmin()),
+      );
+    } else {
+      print("some error happend");
+    }
   }
 }

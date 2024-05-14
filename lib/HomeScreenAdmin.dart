@@ -1,5 +1,6 @@
 // import 'dart:js_util';
 import 'package:flutter/material.dart';
+import 'package:myapp/storiesAdmin/StoriesScreenAdmin.dart';
 // import 'package:flutter/rendering.dart';
 
 void main() {
@@ -12,8 +13,13 @@ class HomeScreenAdmin extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       title: 'Flutter Demo',
+      initialRoute: '/',
+      routes: {
+        '/StoriesScreen':(context) => const PdfApp(),
+        
+      },
       home: HomeScreenclassAdmin(
         title: '',
       ),
@@ -154,7 +160,7 @@ class _MyHomePageState2 extends State<HomeScreenclassAdmin>
                   // ElevatedButton(onPressed: () {}, child: const Text('اقرأ')),
                   ElevatedButton(
                     onPressed: () {
-                      //navigate
+                      Navigator.pushNamed(context, '/StoriesScreen');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(
@@ -203,28 +209,24 @@ class _MyHomePageState2 extends State<HomeScreenclassAdmin>
             ],
           )),
         ),
-         Positioned(
-              bottom: 245,
-              right: 30,
-              child: Container(
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(20.0),
-                    backgroundColor: Colors.white,
-                    side:const  BorderSide(
-                        color: Color.fromARGB(1500, 2, 152, 200),
-                        width: 5),
-                  ),
-                  child: const Icon(
-                      Icons.edit,
-                      size: 30,
-                      color: Color.fromARGB(1500, 2, 152, 200)),
+        Positioned(
+            bottom: 245,
+            right: 30,
+            child: Container(
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  padding: const EdgeInsets.all(20.0),
+                  backgroundColor: Colors.white,
+                  side: const BorderSide(
+                      color: Color.fromARGB(1500, 2, 152, 200), width: 5),
                 ),
-              )),
+                child: const Icon(Icons.edit,
+                    size: 30, color: Color.fromARGB(1500, 2, 152, 200)),
+              ),
+            )),
       ]),
-      
     );
   }
 }
