@@ -39,12 +39,12 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  final List<Widget> _pdfItems = [];
-  // final List<Widget> _pdfItems = [
-  //   PdfViewerItem(pdfAssetPath: 'assets/pdf/الفئران-الثلاثة.pdf'),
-  //   PdfViewerItem(pdfAssetPath: 'assets/pdf/دوري.pdf'),
-  //   PdfViewerItem(pdfAssetPath: 'assets/pdf/وجدت-القلم-الذهبيَّ.pdf'),
-  // ];
+  // final List<Widget> _pdfItems = [];
+  final List<Widget> _pdfItems = [
+    PdfViewerItem(pdfAssetPath: './assets/pdf/الفئران-الثلاثة.pdf'),
+    PdfViewerItem(pdfAssetPath: './assets/pdf/دوري.pdf'),
+    PdfViewerItem(pdfAssetPath: './assets/pdf/وجدت-القلم-الذهبيَّ.pdf'),
+  ];
   @override
   void initState() {
     super.initState();

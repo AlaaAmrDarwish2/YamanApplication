@@ -1,19 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:myapp/firebase_auth/firebase_auth_services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/myBottomNavigationBar.dart';
+import 'package:myapp/firebase_auth/firebase_auth_services.dart';
+import 'package:myapp/login_SignupAdmin/loginAdmin.dart';
 
-Future main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
     await Firebase.initializeApp(
-        options: const FirebaseOptions(
-            apiKey: 'AIzaSyA3QHtrkb4efcW2D5ILfhOnPnQ6hAznhIw',
-            appId: "1:1065969017070:web:92c82404068ed35aecd3ff",
-            messagingSenderId: "1065969017070",
-            projectId: "yaman-9026a"));
+      options: const FirebaseOptions(
+        apiKey: 'YOUR_API_KEY',
+        appId: "YOUR_APP_ID",
+        messagingSenderId: "YOUR_SENDER_ID",
+        projectId: "YOUR_PROJECT_ID",
+      ),
+    );
   }
   await Firebase.initializeApp();
   runApp(AdminSignUpApp());
@@ -24,6 +26,10 @@ class AdminSignUpApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'إنشاء حساب مسؤول',
+      initialRoute: '/',
+      routes: {
+        '/loginAdmin': (context) => const LoginAppAdmin(),
+      },
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -52,8 +58,7 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
     _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    // _childNameController.dispose();
-    // _childDOBController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -64,38 +69,32 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
       child: Scaffold(
         appBar: AppBar(
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50))),
-          backgroundColor: const Color.fromARGB(
-              1500, 2, 152, 200), // Set background color to white
-          leading: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back,
-                    color: Color.fromARGB(1500, 255, 255, 255)), // Arrow back
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              const SizedBox(
-                width: 90,
-              ),
-              const Text(
-                'انشاء حساب',
-                style: TextStyle(
-                  color: Colors.white, // Set title text color to black
-                  fontSize: 24, // Set font size
-                  fontWeight: FontWeight.normal, // Set font weight to bold
-                ),
-              ),
-            ],
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(50),
+              bottomRight: Radius.circular(50),
+            ),
           ),
+          backgroundColor: const Color.fromARGB(1500, 2, 152, 200),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: const Text(
+            'انشاء حساب',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          centerTitle: true,
+
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            // Wrap the Column with SingleChildScrollView
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -104,69 +103,81 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
                   decoration: const InputDecoration(
                     labelText: 'اسم المستخدم',
                     focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 2, 152, 200)),
+                      borderSide: BorderSide(color: Colors.blue),
                     ),
                     labelStyle: TextStyle(
-                        fontSize: 16,
-                        color:
-                            Color.fromARGB(1500, 94, 95, 95)), // Set font size
+                      fontSize: 16,
+                      color: Color.fromARGB(1500, 94, 95, 95),
+                    ),
                   ),
-                  cursorColor: const Color.fromARGB(1500, 2, 152, 200),
-                  style: const TextStyle(fontSize: 20), // Set font size
+                  cursorColor: Colors.blue,
+                  style: const TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 16.0),
-                TextField(
+                TextFormField(
                   controller: _emailController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an email address';
+                    } else if (!value.contains('@')) {
+                      return 'Please enter a valid email address';
+                    }
+                    return null;
+                  },
                   decoration: const InputDecoration(
                     labelText: 'البريد الإلكتروني',
                     focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 2, 152, 200)),
+                      borderSide: BorderSide(color: Colors.blue),
                     ),
                     labelStyle: TextStyle(
-                        fontSize: 16,
-                        color:
-                            Color.fromARGB(1500, 94, 95, 95)), // Set font size
+                      fontSize: 16,
+                      color: Color.fromARGB(1500, 94, 95, 95),
+                    ),
                   ),
-                  cursorColor: const Color.fromARGB(1500, 2, 152, 200),
-                  style: const TextStyle(fontSize: 16), // Set font size
+                  cursorColor: Colors.blue,
+                  style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 16.0),
-                TextField(
+                TextFormField(
                   controller: _passwordController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    } else if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
                   decoration: const InputDecoration(
                     labelText: 'كلمة المرور',
                     focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 2, 152, 200)),
+                      borderSide: BorderSide(color: Colors.blue),
                     ),
                     labelStyle: TextStyle(
-                        fontSize: 16,
-                        color:
-                            Color.fromARGB(1500, 94, 95, 95)), // Set font size
+                      fontSize: 16,
+                      color: Color.fromARGB(1500, 94, 95, 95),
+                    ),
                   ),
                   obscureText: true,
-                  cursorColor: const Color.fromARGB(1500, 2, 152, 200),
-                  style: const TextStyle(fontSize: 16), // Set font size
+                  cursorColor: Colors.blue,
+                  style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 16.0),
                 TextField(
                   controller: _confirmPasswordController,
                   decoration: const InputDecoration(
                     labelText: 'تأكيد كلمة المرور',
-                    labelStyle: TextStyle(
-                        fontSize: 16, color: Color.fromARGB(1500, 94, 95, 95)),
-                    focusColor: Color.fromARGB(1500, 2, 152, 200),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Color.fromARGB(255, 2, 152, 200)),
+                      borderSide: BorderSide(color: Colors.blue),
                     ),
-                    // Set font size
+                    labelStyle: TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(1500, 94, 95, 95),
+                    ),
                   ),
                   obscureText: true,
-                  cursorColor: const Color.fromARGB(1500, 2, 152, 200),
-                  style: const TextStyle(fontSize: 16), // Set font size
+                  cursorColor: Colors.blue,
+                  style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 16.0),
                 Row(
@@ -178,30 +189,25 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
                           _agreedToTerms = value ?? false;
                         });
                       },
-                      activeColor: const Color.fromRGBO(
-                          2, 152, 200, 1), // Set color when checked
+                      activeColor: Colors.blue,
                     ),
                     const Text('أوافق على الشروط والأحكام',
-                        style: TextStyle(fontSize: 16)), // Set font size
+                        style: TextStyle(fontSize: 16)),
                   ],
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: _signUp,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(
-                          2, 152, 200, 1), // Set button color
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(30), // Set border radius
-                      ),
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10)),
-                  child:const Text(
+                    backgroundColor:const Color.fromARGB(1500, 2, 152, 200),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  ),
+                  child: const Text(
                     'إنشاء حساب',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Color.fromARGB(
-                            1500, 255, 255, 255)), // Set font size
+                    style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -212,8 +218,8 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
                   child: const Text(
                     'هل لديك حساب؟ سجل الدخول الآن',
                     style: TextStyle(
-                      color: Color.fromRGBO(2, 152, 200, 1), // Set text color
-                      fontSize: 18, // Set font size
+                      color: Color.fromARGB(1500, 2, 152, 200),
+                      fontSize: 18,
                     ),
                   ),
                 ),
@@ -229,16 +235,38 @@ class _AdminSignUpScreenState extends State<AdminSignUpScreen> {
     String username = _usernameController.text;
     String emailAddress = _emailController.text;
     String password = _passwordController.text;
-    User? user = await _auth.signUpWithNameAndEmailAndPassword(username,emailAddress, password);
+    String confirmPassword = _confirmPasswordController.text;
 
-    if (user != null) {
-      print("user is successfully created ! ");
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const MyNav()),
+    if (password != confirmPassword) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('خطأ'),
+          content: Text('كلمة المرور وتأكيد كلمة المرور غير متطابقين.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('حسناً'),
+            ),
+          ],
+        ),
       );
     } else {
-      print("some error happend");
+      User? user = await _auth.signUpWithNameAndEmailAndPassword(
+        username,
+        emailAddress,
+        password,
+      );
+
+      if (user != null) {
+        print("تم إنشاء المستخدم بنجاح!");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginAppAdmin()),
+        );
+      } else {
+        print("حدث خطأ ما");
+      }
     }
   }
 }

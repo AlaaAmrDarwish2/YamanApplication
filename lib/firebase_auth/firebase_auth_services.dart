@@ -18,6 +18,25 @@ class FireBaseAuthService {
     return null;
   }
 
+  Future<User?> signUpWithNameAndEmailAndPasswordUser(
+      String username,String childname, String email, String password , String age) async {
+    try {
+      UserCredential credential = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      await credential.user!.updateDisplayName(username);
+      // await credential.user!.updateDisplayName(childname);
+      // await credential.user!.updateDisplayName(age);
+
+      return credential.user;
+    } catch (e) {
+      print("some error occured");
+    }
+    return null;
+  }
+
+  
+
   Future<User?> signUpWithEmailAndPassword(
       String email, String password) async {
     try {

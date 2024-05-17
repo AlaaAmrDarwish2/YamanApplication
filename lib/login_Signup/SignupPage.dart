@@ -6,7 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/HomeScreen.dart';
 import 'package:myapp/firebase_auth/firebase_auth_services.dart';
-import 'package:myapp/myBottomNavigationBar.dart';
+import 'package:myapp/login_Signup/login.dart';
+// import 'package:myapp/myBottomNavigationBar.dart';
 // import 'package:myapp/login_Signup/login.dart';
 // import 'package:flutter_application_8/login.dart';
 // import 'DatabaseManager.dart'; // Import your DatabaseManager class
@@ -36,6 +37,7 @@ Widget build(BuildContext context) {
     initialRoute: '/',
     routes: {
       '/HomeScreen': (context) => const HomeScreen(),
+      '/login': (context) => const LoginPage(email: '', password: '')
     },
     home: const SignUpPage(),
   );
@@ -116,17 +118,42 @@ class _SignUpFormState extends State<SignUpForm> {
             TextFormField(
               controller: _parentNameController,
               decoration: const InputDecoration(labelText: 'اسم الوالد'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter parent name';
+                }
+                return null;
+              },
+
             ),
             TextFormField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'البريد الإلكتروني'),
               keyboardType: TextInputType.emailAddress,
+               validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter an email address';
+                } else if (!value.contains('@')) {
+                  return 'Please enter a valid email address';
+                }
+                return null;
+              },
+
               // textDirection: TextDirection.rtl,
             ),
             TextFormField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'كلمة المرور'),
               obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a password';
+                } else if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                return null;
+              },
+
               // textDirection: TextDirection.rtl,
             ),
             const SizedBox(height: 20),
@@ -142,6 +169,13 @@ class _SignUpFormState extends State<SignUpForm> {
               controller: _childNameController,
               decoration: const InputDecoration(labelText: 'اسم الطفل'),
               textDirection: TextDirection.rtl,
+               validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the child\'s name';
+                }
+                return null;
+              },
+
             ),
             TextFormField(
               controller: _childDOBController,
@@ -149,6 +183,13 @@ class _SignUpFormState extends State<SignUpForm> {
                   const InputDecoration(labelText: 'عمر الطفل/تاريخ الميلاد'),
               keyboardType: TextInputType.datetime,
               textDirection: TextDirection.rtl,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the child\'s date of birth';
+                }
+                return null;
+              },
+
             ),
             const SizedBox(height: 20),
             const Text(
@@ -171,7 +212,11 @@ class _SignUpFormState extends State<SignUpForm> {
             // Add other form fields for email, password, child details, etc.
 
             ElevatedButton(
-              onPressed: _signUp,
+              onPressed: (){
+                 if (_formKey.currentState!.validate()) {
+                  _signUp();
+                }
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     const Color.fromARGB(1500, 2, 152, 200), // Background color
@@ -196,13 +241,20 @@ class _SignUpFormState extends State<SignUpForm> {
     String parentname = _parentNameController.text;
     String emailAddress = _emailController.text;
     String password = _passwordController.text;
-    User? user = await _auth.signUpWithNameAndEmailAndPassword(parentname,emailAddress, password);
+    String childName = _childNameController.text;
+    String childAge = _childDOBController.text;
+    User? user = await _auth.signUpWithNameAndEmailAndPasswordUser(
+        parentname,childName,emailAddress, password,childAge);
 
     if (user != null) {
       print("user is successfully created ! ");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const MyNav()),
+        MaterialPageRoute(
+            builder: (context) => LoginPage(
+                  email: '',
+                  password: '',
+                )),
       );
     } else {
       print("some error happend");

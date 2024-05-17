@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // import 'package:myapp/HomeScreen.dart';
 import 'package:myapp/firebase_auth/firebase_auth_services.dart';
+import 'package:myapp/forgetPassword.dart';
 import 'package:myapp/login_Signup/account.dart';
 import 'package:myapp/myBottomNavigationBar.dart';
 // import 'package:myapp/myBottomNavigationBar.dart';
@@ -13,10 +14,16 @@ import 'SignupPage.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (kIsWeb) {
-    await Firebase.initializeApp(options: const FirebaseOptions(apiKey: 'AIzaSyA3QHtrkb4efcW2D5ILfhOnPnQ6hAznhIw', appId: "1:1065969017070:web:92c82404068ed35aecd3ff", messagingSenderId: "1065969017070", projectId: "yaman-9026a"));
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyA3QHtrkb4efcW2D5ILfhOnPnQ6hAznhIw',
+            appId: "1:1065969017070:web:92c82404068ed35aecd3ff",
+            messagingSenderId: "1065969017070",
+            projectId: "yaman-9026a"));
   }
   await Firebase.initializeApp();
-  runApp( LoginPage(
+
+  runApp(LoginPage(
     email: '',
     password: '',
   ));
@@ -41,7 +48,8 @@ class LoginPage extends StatelessWidget {
           },
         ),
       ),
-      body: SingleChildScrollView(
+      body: 
+      SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: SignInForm(),
@@ -121,7 +129,13 @@ class _SignInFormState extends State<SignInForm> {
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  ForgotPasswordPage()),
+              );
+              
+            },
             child: const Text('نسيت كلمة السر!'),
           ),
         ),
@@ -170,7 +184,7 @@ class _SignInFormState extends State<SignInForm> {
 
     if (user != null) {
       print("user is successfully login ! ");
-     Navigator.push(
+      Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const MyNav()),
       );

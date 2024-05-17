@@ -23,11 +23,11 @@ Future main() async {
             projectId: "yaman-9026a"));
   }
   await Firebase.initializeApp();
-  runApp(const account());
+  runApp(const accountUser());
 }
 
-class account extends StatelessWidget {
-  const account({super.key});
+class accountUser extends StatelessWidget {
+  const accountUser({super.key});
 
   @override
   Widget build(BuildContext context) {

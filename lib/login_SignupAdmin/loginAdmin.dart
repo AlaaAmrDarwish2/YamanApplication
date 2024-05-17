@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/HomeScreen.dart';
 import 'package:myapp/firebase_auth/firebase_auth_services.dart';
+import 'package:myapp/forgetPassword.dart';
 import 'package:myapp/login_Signup/login.dart';
 import 'package:myapp/login_SignupAdmin/signupAdmin.dart';
 import 'package:myapp/myBottomNavigationBar.dart';
@@ -42,6 +43,7 @@ class LoginAppAdmin extends StatelessWidget {
         '/HomeScreen': (context) => const HomeScreen(),
         '/loginAdmin': (context) => const LoginAppAdmin(),
         '/signupAdmin': (context) => AdminSignUpApp(),
+        '/forgetPassword':(context) => const ForgotPasswordPage(),
       },
       home: const AdminLoginPage(),
       debugShowCheckedModeBanner: false, // Add this line
@@ -205,7 +207,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          // Add action for 'نسيت كلمة المرور' link
+                          Navigator.pushNamed(context, '/forgetPassword');
                         },
                         child: const Text(
                           'نسيت كلمة المرور؟',

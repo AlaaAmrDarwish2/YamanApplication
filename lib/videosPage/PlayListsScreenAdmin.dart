@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'playlistVideos.dart';
-import 'pv2.dart';
-import 'pv3.dart';
-import 'pv4.dart';
-import 'pv5.dart';
-import 'pv6.dart';
+import 'playlistVideosAdmin.dart';
+import 'pv2Admin.dart';
+import 'pv3Admin.dart';
+import 'pv4Admin.dart';
+import 'pv5Admin.dart';
+import 'pv6Admin.dart';
 
 void main() {
   runApp(const PlayListsScreenAdmin());
@@ -21,27 +21,27 @@ class PlayListsScreenAdmin extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => PlayListsScreenclass(),
-        '/playlistVideos': (context) => playlistVideos(),
-        '/pv2': (context) => pv2(),
-        '/pv3': (context) => pv3(),
-        '/pv4': (context) => pv4(),
-        '/pv5': (context) => pv5(),
-        '/pv6': (context) => pv6(),
+        '/': (context) => const PlayListsScreenclassAdmin(),
+        '/playlistVideos': (context) => PlaylistVideosAdmin(),
+        '/pv2': (context) => pv2Admin(),
+        '/pv3': (context) => pv3Admin(),
+        '/pv4': (context) => pv4Admin(),
+        '/pv5': (context) => pv5Admin(),
+        '/pv6': (context) => pv6Admin(),
         // Add more routes as needed
       },
     );
   }
 }
 
-class PlayListsScreenclass extends StatefulWidget {
-  const PlayListsScreenclass({Key? key}) : super(key: key);
+class PlayListsScreenclassAdmin extends StatefulWidget {
+  const PlayListsScreenclassAdmin({Key? key}) : super(key: key);
 
   @override
   _PlayListsScreenclassState createState() => _PlayListsScreenclassState();
 }
 
-class _PlayListsScreenclassState extends State<PlayListsScreenclass> {
+class _PlayListsScreenclassState extends State<PlayListsScreenclassAdmin> {
   final List<Map<String, dynamic>> itemList = [
     {
       "label": "ارسم",
